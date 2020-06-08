@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <title>Lumi directory</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+      integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      crossorigin="anonymous"
+    />
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+      integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div id="app" class="container container-fluid">
+      <h1>Directory of files</h1>
+      <div class="alert alert-info" id="message" v-if="message">
+        {{message}}
+      </div>
+      <table class="table" v-if="buckets">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Name of bucket</th>
+            <th scope="col">Date created</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="bucket in buckets" class="bucket-list">
+            <th scope="row">
+              <a
+                href="#"
+                v-on:click="loadFiles(bucket.Name)"
+                class="bucket-list-link"
+                >{{ bucket.Name }}</a
+              >
+            </th>
+            <td>{{ bucket.CreationDate }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="table files-table" v-if="files">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Name of file</th>
+            <th scope="col">Last modified</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="file in files" class="files-list">
+            <th scope="row">
+              <a
+                href="#"
+                v-on:click="loadFiles(file.bucket, file.name, file.type, file.Key)"
+                class="file-list-link"
+                >{{ file.name }}</a
+              >
+            </th>
+            <td>{{ file.LastModified }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- Button trigger modal -->
+      <button
+        type="button"
+        class="btn btn-primary change-user-configuration"
+        data-toggle="modal"
+        data-target="#changeConfig"
+      >
+        Change User Configuration
+      </button>
+
+      <!-- Modal -->
+      <div
+        class="modal fade"
+        id="changeConfig"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="changeConfigLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="changeConfigLabel">
+                Edit Configuration
+              </h5>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="accessKeyId">Access Key ID</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="accessKeyId"
+                  v-model="accessKeyId"
+                  aria-describedby="accessKeyIdHelp"
+                />
+                <small id="accessKeyIdHelp" class="form-text text-muted"
+                  >You can find instructions
+                  <a
+                    target="_blank"
+                    href="https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/getting-your-credentials.html"
+                    >here</a
+                  ></small
+                >
+              </div>
+
+              <div class="form-group">
+                <label for="secretAccessKey">Secret Access Key</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="secretAccessKey"
+                  v-model="secretAccessKey"
+                  aria-describedby="secretAccessKeyHelp"
+                />
+              </div>
+              <div class="form-group">
+                <label for="region">Region</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="region"
+                  v-model="region"
+                />
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary change-credentials-save"
+                v-on:click="changeCredentials"
+                data-dismiss="modal"
+              >
+                Save changes
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript" src="./frontend-functions.js"></script>
+    <script>
+      const app = new Vue(appObj);
+    </script>
+  </body>
+</html>
